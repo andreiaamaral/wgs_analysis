@@ -16,6 +16,7 @@ Participants in the hackathon (14): Andreia Amaral
                                Jose Espinosa
                               
                                
-                                                    
+           ![](https://github.com/andreiaamaral/IsomiR-Window/blob/master/IsomirPNGcopy_logo.jpg)
+                                         
                                
                                
