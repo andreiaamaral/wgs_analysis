@@ -15,6 +15,6 @@ Participants in the hackathon: Andreia Amaral
                                Alexandre GilardetSlide1.jpg                               
                                
                                
-                               ![](Slide1.jpg)                               
+                               ![](https://github.com/andreiaamaral/wgs_analysis/blob/main/Slide1.jpg)                               
                                
                                
