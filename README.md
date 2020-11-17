@@ -12,7 +12,9 @@ Participants in the hackathon: Andreia Amaral
                                Zeinab Manzari 
                                Phanindra-SLU-FAANG
                                Philippe BARDOU
-                               Alexandre Gilardet
+                               Alexandre GilardetSlide1.jpg                               
                                
+                               
+                               ![](Slide1.jpg)                               
                                
                                
