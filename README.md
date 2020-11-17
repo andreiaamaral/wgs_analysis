@@ -1,6 +1,6 @@
 # wgs_analysis
 
-Participants in the hackathon: Andreia Amaral
+Participants in the hackathon (14): Andreia Amaral
                                Juliana Menezes
                                Pedro Sá
                                Lucio Marcello 
@@ -12,7 +12,8 @@ Participants in the hackathon: Andreia Amaral
                                Zeinab Manzari 
                                Phanindra-SLU-FAANG
                                Philippe BARDOU
-                               Alexandre GilardetSlide1.jpg                               
+                               Alexandre Gilardet 
+                               Jose Espinosa
                                ![](https://github.com/andreiaamaral/wgs_analysis/blob/main/Slide1.jpg)
                                
                                                     
