@@ -13,7 +13,7 @@ Participants in the hackathon: Andreia Amaral
                                Phanindra-SLU-FAANG
                                Philippe BARDOU
                                Alexandre GilardetSlide1.jpg                               
-                               
+                               ![](https://github.com/andreiaamaral/wgs_analysis/blob/main/Slide1.jpg)
                                
                                ![](https://github.com/andreiaamaral/wgs_analysis/blob/main/Slide1.jpg)                               
                                
