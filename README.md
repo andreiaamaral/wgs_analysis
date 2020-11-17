@@ -16,7 +16,7 @@ Participants in the hackathon (14): Andreia Amaral
                                Jose Espinosa
                               
                                
-           ![Alt text](https://github.com/andreiaamaral/wgs_analysis/blob/main/Slide1.jpg)
+           ![ ](https://github.com/andreiaamaral/wgs_analysis/blob/main/Slide1.jpg)
                                          
                                
                                
