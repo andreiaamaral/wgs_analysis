@@ -72,7 +72,7 @@ samtools faidx GCF_002310715.1_ASM231071v1_genomic.fna
 2. convert SAM to BAM
 samtools view -S -b E2-aln_1223.sam.sam > E2-aln_1223.bam
 
-###GATK
+### GATK
 
 1- Variant calling
 
