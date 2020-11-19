@@ -1,6 +1,6 @@
 # wgs_analysis
 
-##Participants in the hackathon (14): 
+## Participants in the hackathon (14): 
                                 
                                 Andreia Amaral
 
@@ -33,7 +33,7 @@
      
      
      
-#WORKFLOW                         
+## WORKFLOW                         
                                
           
           
@@ -41,6 +41,6 @@
                                          
                                
      
-#Tools for the workflow and manual instructions
+## Tools for the workflow and manual instructions
      
      
