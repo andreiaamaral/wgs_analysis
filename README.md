@@ -1,6 +1,7 @@
 # wgs_analysis
 
-Participants in the hackathon (14): 
+##Participants in the hackathon (14): 
+                                
                                 Andreia Amaral
 
                                Juliana Menezes
@@ -29,11 +30,13 @@ Participants in the hackathon (14):
                                Jose Espinosa
                                
                                
-                              
+     ###WORKFLOW                         
                                
           
           
  ![](https://github.com/andreiaamaral/wgs_analysis/blob/main/Slide1.jpg)
                                          
                                
-                               
+     ##Tools for the workflow and manual instructions
+     
+     
