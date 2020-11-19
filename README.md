@@ -30,13 +30,17 @@
                                Jose Espinosa
                                
                                
-     ###WORKFLOW                         
+     
+     
+     
+###WORKFLOW                         
                                
           
           
  ![](https://github.com/andreiaamaral/wgs_analysis/blob/main/Slide1.jpg)
                                          
                                
-     ##Tools for the workflow and manual instructions
+     
+##Tools for the workflow and manual instructions
      
      
