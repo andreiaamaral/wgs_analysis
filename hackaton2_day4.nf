@@ -17,11 +17,13 @@ params.out = "${params.outdir}/out"
 
 
  log.info """\
-         POP_GENOMICS - N F   P I P E L I N E    
-         ===================================
+         ===================================================    
+         || POPULATION_GENOMICS - N F   P I P E L I N E   ||
+         ===================================================
+         
          Reference Genome: ${params.ref}
-         reads        : ${params.reads}
-         outdir       : ${params.outdir}
+         Read_file(s)    : ${params.reads}
+         outdir          : ${params.outdir}
          """
          .stripIndent()
 
