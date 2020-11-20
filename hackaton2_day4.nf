@@ -176,7 +176,7 @@ process variant_calling {
     """
     
 }
-/*
+
 
 process variant_filter {
    
@@ -214,4 +214,3 @@ process merging_VCFs {
    """
 }
 
-*/
