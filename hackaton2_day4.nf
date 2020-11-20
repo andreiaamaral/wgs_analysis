@@ -144,7 +144,7 @@ process markDuplicates {
     set val(pair_id), path(bamfile), path(baifile) from bam_for_sorting_bam_ch
 
     output:
-    path("${pair_id}_sorted_duplicates_rm.bam") into bam_for_variant_calling_ch, sorted_dedup_ch_for_metrics, bam_for_bqsr
+    set val(pair_id), path("${pair_id}_sorted_duplicates_rm.bam") into bam_for_variant_calling_ch, sorted_dedup_ch_for_metrics, bam_for_bqsr
     set val(pair_id), path("${pair_id}_sorted_duplicates_metrics.txt") into dedup_qc_ch
 
 
@@ -170,24 +170,24 @@ process variant_calling {
     echo true
     
     input:
-    path '*.bam' from bam_for_variant_calling_ch.collect()
+    set val(pair_id), path (bam_files) from bam_for_variant_calling_ch
     
     //set val(pair_id), file(set_bam_files) from bam_for_variant_calling_ch
     file (indexed_ref) from samtools_index_ch
     
     output:
-    file ("Var_call_vcf_file.vcf") into vcf_variant_ch
-    file ("Var_call_bam_file.bam") into bam_variant_ch
+    set val(pair_id), file ("${pair_id}_var_call_vcf_file.vcf") into vcf_variant_ch
+    set val(pair_id), file ("${pair_id}_var_call_bam_file.bam") into bam_variant_ch
     
     script:
     """
     echo "gatk --java-options "-Xmx4g" HaplotypeCaller \
-        -R ${indexed_ref}.fna -I *.bam -O Var_call_output.vcf.gz \
-        -bamout Var_call_bamout.bam" > Var_call_vcf_file.vcf
+        -R ${indexed_ref}.fna -I $bam_files -O ${pair_id}_var_call_vcf_file.vcf.gz \
+        -bamout ${pair_id}_var_call_bam_file.bam" > ${pair_id}_var_call_vcf_file.vcf
         
     echo "gatk --java-options "-Xmx4g" HaplotypeCaller \
-        -R ${indexed_ref}.fna -I *.bam -O Var_call_output.vcf.gz \
-        -bamout Var_call_bamout.bam" > Var_call_bam_file.bam
+        -R ${indexed_ref}.fna -I $bam_files -O ${pair_id}_var_call_vcf_file.vcf.gz \
+        -bamout ${pair_id}_var_call_bam_file.bam" > ${pair_id}_var_call_bam_file.bam
     """
     
 }
@@ -199,22 +199,25 @@ process variant_filter {
    publishDir "${params.out}/Variant_Called", mode:'copy'
    
    input:
-   file (vcf_file) from vcf_variant_ch
+   set val(pair_id), file (vcf_file) from vcf_variant_ch
    file (indexed_ref) from gen_indx_var_filtering_ch
    
    output:
-   file ("VCF_variant_filtered.vcf") into var_filtered_ch
+   file ("${pair_id}_variant_filtered.vcf*") into var_filtered_ch
    
    script:
    """
    echo "gatk VariantFiltration -R ${indexed_ref}.fna \
-        -V vcf_file -O VCF_variant_filtered.vcf.gz --filter-name \
-        "my_filter1" --filter-expression QUAL < 0 || DP<10.0 || MQ < 30.00 || SOR > 10.000 || QD < 2.00 || QD> 5.00|| FS > 200.000 || ReadPosRankSum < -20.000 || ReadPosRankSum > 20.000 " > VCF_variant_filtered.vcf 
+        -V vcf_file -O ${pair_id}_variant_filtered.vcf.gz --filter-name \
+        'my_filter1' --filter-expression 'QUAL < 0 || DP<10.0 || MQ < 30.00 || SOR > 10.000 || QD < 2.00 || QD> 5.00|| FS > 200.000 || ReadPosRankSum < -20.000 || ReadPosRankSum > 20.000' " > ${pair_id}_variant_filtered.vcf 
    """
    
    }
 
 // Same case as Variant_calling. Require use of several files at the same time.
+
+
+//var_filtered_ch.collect().view()
 
 process merging_VCFs {
    
@@ -222,7 +225,7 @@ process merging_VCFs {
    publishDir "${params.out}/Variant_Called", mode:'copy'
    
    input:
-   file (var_filt_file) from var_filtered_ch
+   path (var_filt_file) from var_filtered_ch.collect()
    
    output:
    file ("VCF_var_filt_merged.vcf") into var_filt_merged_ch
@@ -230,7 +233,7 @@ process merging_VCFs {
    script:
    """
    echo "java -jar /data/software/picard/build/libs/picard.jar MergeVcfs \
-        I=E1_output_filtered.vcf.gz I=E2_output_filtered.vcf.gz \
+         `for f in *.vcf;  do echo I = \${f}; done;`\
         O = VCF_var_filt_merged.vcf.gz" > VCF_var_filt_merged.vcf
    """
 }
