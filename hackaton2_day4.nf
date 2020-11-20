@@ -156,6 +156,7 @@ process markDuplicates {
 
 process variant_calling {
 
+    publishDir "${params.out}/Variant_Called", mode:'copy'
     echo true
     
     input:
@@ -180,6 +181,7 @@ process variant_calling {
 process variant_filter {
    
    echo true
+   publishDir "${params.out}/Variant_Called", mode:'copy'
    
    input:
    file (vcf_file) from vcf_variant_ch
@@ -200,6 +202,7 @@ process variant_filter {
 process merging_VCFs {
    
    echo true
+   publishDir "${params.out}/Variant_Called", mode:'copy'
    
    input:
    file (var_filt_file) from var_filtered_ch
@@ -211,5 +214,4 @@ process merging_VCFs {
    """
    echo "java -jar /data/software/picard/build/libs/picard.jar MergeVcfs I=E1_output_filtered.vcf.gz I=E2_output_filtered.vcf.gz O = VCF_var_filt_merged.vcf.gz" > VCF_var_filt_merged.vcf
    """
-   
-   }
+}
