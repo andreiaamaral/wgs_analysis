@@ -138,11 +138,10 @@ process markDuplicates {
     set val(pair_id), path(bamfile), path(baifile) from bam_for_sorting_bam_ch
 
     output:
-    set val(pair_id), path("${pair_id}_sorted_duplicates_rm.bam") into bam_for_variant_calling_ch, sorted_dedup_ch_for_metrics, bam_for_bqsr
+    path("${pair_id}_sorted_duplicates_rm.bam") into bam_for_variant_calling_ch, sorted_dedup_ch_for_metrics, bam_for_bqsr
     set val(pair_id), path("${pair_id}_sorted_duplicates_metrics.txt") into dedup_qc_ch
 
 
-    //(CHANGED HERE)
     script: 
     """
     echo "java -jar /data/software/picard/build/libs/picard.jar MarkDuplicates I=${bamfile} O=${pair_id}_sorted_duplicates_rm.bam M=${pair_id}_sorted_duplicates_metrics.txt REMOVE_SEQUENCING_DUPLICATES=true" > ${pair_id}_sorted_duplicates_rm.bam
@@ -160,19 +159,19 @@ process variant_calling {
     echo true
     
     input:
-    //set val(pair_id), file(set_bam_files) from bam_for_variant_calling_ch.collect()
+    path '*.bam' from bam_for_variant_calling_ch.collect()
     
-    set val(pair_id), file(set_bam_files) from bam_for_variant_calling_ch
+    //set val(pair_id), file(set_bam_files) from bam_for_variant_calling_ch
     file (indexed_ref) from samtools_index_ch
     
     output:
-    set val(pair_id), file ("${pair_id}_vcf_file.vcf") into vcf_variant_ch
-    file ("${pair_id}_bam_file.bam") into bam_variant_ch
+    file ("Var_call_vcf_file.vcf") into vcf_variant_ch
+    file ("Var_call_bam_file.bam") into bam_variant_ch
     
     script:
     """
-    echo "gatk --java-options "-Xmx4g" HaplotypeCaller -R ${indexed_ref}.fna -I ${set_bam_files} -O ${pair_id}_output.vcf.gz -bamout ${pair_id}_bamout.bam" > ${pair_id}_vcf_file.vcf
-    echo "gatk --java-options "-Xmx4g" HaplotypeCaller -R ${indexed_ref}.fna -I ${set_bam_files} -O ${pair_id}_output.vcf.gz -bamout ${pair_id}_bamout.bam" > ${pair_id}_bam_file.bam
+    echo "gatk --java-options "-Xmx4g" HaplotypeCaller -R ${indexed_ref}.fna -I *.bam -O Var_call_output.vcf.gz -bamout Var_call_bamout.bam" > Var_call_vcf_file.vcf
+    echo "gatk --java-options "-Xmx4g" HaplotypeCaller -R ${indexed_ref}.fna -I *.bam -O Var_call_output.vcf.gz -bamout Var_call_bamout.bam" > Var_call_bam_file.bam
     """
     
 }
@@ -213,4 +212,5 @@ process merging_VCFs {
    echo "java -jar /data/software/picard/build/libs/picard.jar MergeVcfs I=E1_output_filtered.vcf.gz I=E2_output_filtered.vcf.gz O=E12output_variants.vcf.gz" > ${pair_id}_var_filt_merged.vcf
    """
 }
+
 
