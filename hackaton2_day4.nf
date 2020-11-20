@@ -53,7 +53,10 @@ process indexing_genome_dict {
     
     script:
     """
-    echo "java -jar /data/software/picard/build/libs/picard.jar CreateSequenceDictionary R= ${transcriptome}  O=${transcriptome}.dict" > ${transcriptome}.dict
+    echo "java -jar /data/software/picard/build/libs/picard.jar \
+            CreateSequenceDictionary R= ${transcriptome} \
+            O=${transcriptome}.dict" > ${transcriptome}.dict
+            
     echo "samtools faidx ${transcriptome}" > ${transcriptome}.fai
     """
  }
@@ -85,7 +88,8 @@ process index {
 process align {
     cpus 1
   
-    publishDir "${params.out}/aligned_reads", mode:'copy' // tells the output of the chanel it is created automatically by nextflow
+    // tells the output of the chanel it is created automatically by nextflow
+    publishDir "${params.out}/aligned_reads", mode:'copy' 
 	container 'gencorefacility/variant-calling-pipeline-gatk4'
 	
     input:
@@ -146,7 +150,11 @@ process markDuplicates {
 
     script: 
     """
-    echo "java -jar /data/software/picard/build/libs/picard.jar MarkDuplicates I=${bamfile} O=${pair_id}_sorted_duplicates_rm.bam M=${pair_id}_sorted_duplicates_metrics.txt REMOVE_SEQUENCING_DUPLICATES=true" > ${pair_id}_sorted_duplicates_rm.bam
+    echo "java -jar /data/software/picard/build/libs/picard.jar \
+        MarkDuplicates I=${bamfile} O=${pair_id}_sorted_duplicates_rm.bam \
+        M=${pair_id}_sorted_duplicates_metrics.txt \
+        REMOVE_SEQUENCING_DUPLICATES=true" > ${pair_id}_sorted_duplicates_rm.bam
+        
     echo "${pair_id}" > ${pair_id}_sorted_duplicates_metrics.txt
     """ 
 }
@@ -173,8 +181,13 @@ process variant_calling {
     
     script:
     """
-    echo "gatk --java-options "-Xmx4g" HaplotypeCaller -R ${indexed_ref}.fna -I *.bam -O Var_call_output.vcf.gz -bamout Var_call_bamout.bam" > Var_call_vcf_file.vcf
-    echo "gatk --java-options "-Xmx4g" HaplotypeCaller -R ${indexed_ref}.fna -I *.bam -O Var_call_output.vcf.gz -bamout Var_call_bamout.bam" > Var_call_bam_file.bam
+    echo "gatk --java-options "-Xmx4g" HaplotypeCaller \
+        -R ${indexed_ref}.fna -I *.bam -O Var_call_output.vcf.gz \
+        -bamout Var_call_bamout.bam" > Var_call_vcf_file.vcf
+        
+    echo "gatk --java-options "-Xmx4g" HaplotypeCaller \
+        -R ${indexed_ref}.fna -I *.bam -O Var_call_output.vcf.gz \
+        -bamout Var_call_bamout.bam" > Var_call_bam_file.bam
     """
     
 }
@@ -194,7 +207,9 @@ process variant_filter {
    
    script:
    """
-   echo "gatk VariantFiltration -R ${indexed_ref}.fna -V vcf_file -O VCF_variant_filtered.vcf.gz --filter-name "my_filter1" --filter-expression QUAL < 0 || DP<10.0 || MQ < 30.00 || SOR > 10.000 || QD < 2.00 || QD> 5.00|| FS > 200.000 || ReadPosRankSum < -20.000 || ReadPosRankSum > 20.000 " > VCF_variant_filtered.vcf 
+   echo "gatk VariantFiltration -R ${indexed_ref}.fna \
+        -V vcf_file -O VCF_variant_filtered.vcf.gz --filter-name \
+        "my_filter1" --filter-expression QUAL < 0 || DP<10.0 || MQ < 30.00 || SOR > 10.000 || QD < 2.00 || QD> 5.00|| FS > 200.000 || ReadPosRankSum < -20.000 || ReadPosRankSum > 20.000 " > VCF_variant_filtered.vcf 
    """
    
    }
@@ -214,6 +229,8 @@ process merging_VCFs {
    
    script:
    """
-   echo "java -jar /data/software/picard/build/libs/picard.jar MergeVcfs I=E1_output_filtered.vcf.gz I=E2_output_filtered.vcf.gz O = VCF_var_filt_merged.vcf.gz" > VCF_var_filt_merged.vcf
+   echo "java -jar /data/software/picard/build/libs/picard.jar MergeVcfs \
+        I=E1_output_filtered.vcf.gz I=E2_output_filtered.vcf.gz \
+        O = VCF_var_filt_merged.vcf.gz" > VCF_var_filt_merged.vcf
    """
 }
