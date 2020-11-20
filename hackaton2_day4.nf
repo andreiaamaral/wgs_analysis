@@ -182,19 +182,19 @@ process variant_filter {
    echo true
    
    input:
-   set val(pair_id), file (vcf_file) from vcf_variant_ch
+   file (vcf_file) from vcf_variant_ch
    file (indexed_ref) from gen_indx_var_filtering_ch
    
    output:
-   set val(pair_id), file ("${pair_id}_variant_filtered.vcf") into var_filtered_ch
+   file ("VCF_variant_filtered.vcf") into var_filtered_ch
    
    script:
    """
-   echo "gatk VariantFiltration -R ${indexed_ref}.fna -V ${vcf_file}.vcf.gz -O ${pair_id}_filtered.vcf.gz --filter-name "my_filter1" --filter-expression QUAL < 0 || DP<10.0 || MQ < 30.00 || SOR > 10.000 || QD < 2.00 || QD> 5.00|| FS > 200.000 || ReadPosRankSum < -20.000 || ReadPosRankSum > 20.000 " > ${pair_id}_variant_filtered.vcf 
+   echo "gatk VariantFiltration -R ${indexed_ref}.fna -V vcf_file -O VCF_variant_filtered.vcf.gz --filter-name "my_filter1" --filter-expression QUAL < 0 || DP<10.0 || MQ < 30.00 || SOR > 10.000 || QD < 2.00 || QD> 5.00|| FS > 200.000 || ReadPosRankSum < -20.000 || ReadPosRankSum > 20.000 " > VCF_variant_filtered.vcf 
    """
    
    }
-   
+
 // Same case as Variant_calling. Require use of several files at the same time.
 
 process merging_VCFs {
@@ -202,15 +202,14 @@ process merging_VCFs {
    echo true
    
    input:
-   set val(pair_id), file (var_filt_file) from var_filtered_ch
+   file (var_filt_file) from var_filtered_ch
    
    output:
-   file ("${pair_id}_var_filt_merged.vcf") into var_filt_merged_ch
+   file ("VCF_var_filt_merged.vcf") into var_filt_merged_ch
    
    script:
    """
-   echo "java -jar /data/software/picard/build/libs/picard.jar MergeVcfs I=E1_output_filtered.vcf.gz I=E2_output_filtered.vcf.gz O=E12output_variants.vcf.gz" > ${pair_id}_var_filt_merged.vcf
+   echo "java -jar /data/software/picard/build/libs/picard.jar MergeVcfs I=E1_output_filtered.vcf.gz I=E2_output_filtered.vcf.gz O = VCF_var_filt_merged.vcf.gz" > VCF_var_filt_merged.vcf
    """
-}
-
-
+   
+   }
